@@ -1,4 +1,4 @@
-# 📘 Manual Técnico — Proyecto 1
+# Manual Técnico — Proyecto 1
 **Desarrollo de Contenedores y Gestión de Imágenes en Entornos Virtualizados**  
 Curso: Sistemas Operativos 1  
 

@@ -53,7 +53,7 @@ Si el resultado es >0, el CPU soporta KVM.
 
 Si devuelve 0, la virtualización no está habilitada.
 
-![](/images/01.png)
+![](./images/01.png)
 
 #### 5.1.2. Instalar KVM y herramientas necesarias
 
@@ -78,7 +78,7 @@ virsh list --all
 ```
 Si `kvm-ok` indica que KVM está habilitado y `virsh list --all` muestra una lista vacía, la instalación fue exitosa.
 
-![](/images/02.png)
+![](./images/02.png)
 
 #### 5.1.4. Configurar permisos
 Agregar el usuario al grupo `libvirt` para gestionar VMs sin sudo:
@@ -109,46 +109,46 @@ sudo mv ~/Descargas/ubuntu-22.04.5-live-server-amd64.iso /var/lib/libvirt/images
 
 Virt-manager reconoce de inmediato los archivos que están en este directorio. Además se centralizan los discos e ISOs en el storage pool por defecto.
 
-![](/images/05.png)
+![](./images/05.png)
 
 #### 5.2.1. Crear las VM
 
 El siguiente proceso se repite para cada una de las tres VMs (vm1, vm2, vm3):
 
 ##### Abrimos Virt-Manager
-![](/images/03.png)
+![](./images/03.png)
 
 ##### Elegimos crear una nueva máquina virtual
 
-![](/images/04.png)
+![](./images/04.png)
 
 ##### Elegimos medio de instalación local
-![](/images/06.png)
+![](./images/06.png)
 
 ##### Seleccionamos la imagen ISO de Ubuntu Server 22.04.5
-![](/images/07.png)
+![](./images/07.png)
 
 ##### Elegimos la RAM y el número de CPUs
-![](/images/08.png)
+![](./images/08.png)
 
 ##### Asignamos el tamaño del disco (20 GB para cada VM)
-![](/images/09.png)
+![](./images/09.png)
 
 ##### Asignamos nombre a la VM (vm1, vm2, vm3)
 
-![](/images/10.png)
+![](./images/10.png)
 
 ##### Se crea la VM y se realizan las configuraciones iniciales
 - Se configuran algunas opciones como el idioma, el teclado, el tipo de instalación (servidor en nuestro caso), nombre de usuario, contraseña, etc.
 
-![](/images/11.png)
-![](/images/12.png)
-![](/images/13.png)
-![](/images/14.png)
+![](./images/11.png)
+![](./images/12.png)
+![](./images/13.png)
+![](./images/14.png)
 
 ##### Se reincicia la VM y ya se puede acceder a ella.
-![](/images/15.png)
-![](/images/16.png)
+![](./images/15.png)
+![](./images/16.png)
 
 
 ### 5.3 Instalación de runtimes

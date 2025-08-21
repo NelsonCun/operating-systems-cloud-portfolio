@@ -153,13 +153,99 @@ El siguiente proceso se repite para cada una de las tres VMs (vm1, vm2, vm3):
 
 ### 5.3 Instalación de runtimes
 - **VM1 y VM2** → containerd
+#### 5.3.1. Actualizamos paquetes y dependencias:
 
+```bash
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y ca-certificates curl gnupg lsb-release
+```
 
-- **VM3** → Docker + Zot  
+#### 5.3.2. Se agrega el repositorio oficial de Docker para que se tenga la versión más reciente:
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+#### 5.3.3. Instalar Containerd
+
+```bash
+sudo apt update
+sudo apt install -y containerd.io
+```
+
+#### 5.3.4. Configurar Containerd con valores por defecto
+
+```bash
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+```
+
+#### 5.3.5. Iniciar Containerd
+
+```bash
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+sudo systemctl status containerd
+```
+
+#### 5.3.6. Verificar que containerd está instalado y corriendo
+
+```bash
+containerd --version
+```
+
+- **VM3** → Docker
+
+#### 5.3.1. Actualizamos paquetes y dependencias:
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y ca-certificates curl gnupg lsb-release
+```
+
+#### 5.3.2. Se agrega el repositorio oficial de Docker para que se tenga la versión más reciente:
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+#### 5.3.3. Instalar Docker Engine
+
+```bash
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+#### 5.3.4. Iniciar Docker
+
+```bash
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo systemctl status docker
+```
+
+#### 5.3.5. Verificar que Docker está instalado y corriendo
+
+```bash
+docker --version
+```
 
 ---
 
 ## 6. Desarrollo de las APIs
+
 
 ### 6.1 Lenguaje y librerías utilizadas (Go).  
 

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-practica
+  labels:
+    run: pod-practica
+spec:
+  containers:
+  - name: pod-practica
+    image: ghcr.io/project-zot/zot-linux-amd64:latest
+    ports:
+    - containerPort: 5000
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always

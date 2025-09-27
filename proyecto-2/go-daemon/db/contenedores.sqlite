@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp DATETIME,
+    contenedor TEXT,
+    accion TEXT,  -- "creado" o "eliminado"
+    cpu REAL,
+    ram REAL
+);

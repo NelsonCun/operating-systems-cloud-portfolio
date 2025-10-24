@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
 	"net"
+	"time"
 
 	pb "server_go/proto"
 
@@ -15,9 +17,44 @@ type server struct {
 	pb.UnimplementedWeatherTweetServiceServer
 }
 
+var (
+	kafkaWriterAddr  = "localhost:6001" // gRPC Kafka writer
+	rabbitWriterAddr = "localhost:6002" // gRPC RabbitMQ writer
+)
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+// SendTweet decide aleatoriamente a cuál writer enviar
 func (s *server) SendTweet(ctx context.Context, req *pb.WeatherTweetRequest) (*pb.WeatherTweetResponse, error) {
-	fmt.Printf("Go gRPC recibió: %+v\n", req)
-	return &pb.WeatherTweetResponse{Status: "Tweet recibido correctamente en Go ✅"}, nil
+	fmt.Printf("📩 gRPC recibió: %+v\n", req)
+
+	var writerAddr string
+	if rand.Intn(2) == 0 {
+		writerAddr = kafkaWriterAddr
+		fmt.Println("➡️  Enviando a Kafka Writer")
+	} else {
+		writerAddr = rabbitWriterAddr
+		fmt.Println("➡️  Enviando a RabbitMQ Writer")
+	}
+
+	// Conectarse al writer por gRPC
+	conn, err := grpc.Dial(writerAddr, grpc.WithInsecure())
+	if err != nil {
+		log.Println("❌ Error conectando al writer:", err)
+		return &pb.WeatherTweetResponse{Status: "Error conectando al writer"}, err
+	}
+	defer conn.Close()
+
+	client := pb.NewWeatherTweetServiceClient(conn)
+	resp, err := client.SendTweet(ctx, req)
+	if err != nil {
+		log.Println("❌ Error enviando al writer:", err)
+		return &pb.WeatherTweetResponse{Status: "Error enviando al writer"}, err
+	}
+
+	return resp, nil
 }
 
 func main() {
@@ -29,7 +66,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterWeatherTweetServiceServer(grpcServer, &server{})
 
-	fmt.Println("Go gRPC server escuchando en :50051")
+	fmt.Println("🚀 gRPC Server escuchando en :50051")
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("❌ Error en Serve: %v", err)
 	}

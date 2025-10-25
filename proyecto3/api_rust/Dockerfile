@@ -1,35 +1,41 @@
+# Etapa de compilación
 FROM rust:alpine AS builder
 
 # Crear directorio de trabajo
 WORKDIR /app
 
+# Instalar dependencias necesarias para compilar
 RUN apk add --no-cache protobuf gcc musl-dev
 
-# Copiar archivos de configuración
+# Copiar todo el código fuente
 COPY . .
 
-# Compilar la aplicación en modo release
-RUN cargo install --path .
+# Compilar en modo release
+RUN cargo build --release
 
-
-
-# Imagen final más pequeña
+# Etapa final (imagen ligera)
 FROM alpine
+
+# Crear usuario sin privilegios
+RUN adduser -D app_user
 
 # Crear directorio de trabajo
 WORKDIR /app
 
-# Copiar el binario compilado desde el builder
-COPY --from=builder --chown=app_user:app_user /app/target/release/api_rust ./api_rust
+# Copiar el binario compilado desde la etapa anterior
+COPY --from=builder /app/target/release/api_rust ./api_rust
 
-# Exponer el puerto en el que corre la aplicación
-EXPOSE 8080
+# Otorgar permisos correctos
+RUN chown app_user:app_user ./api_rust
 
-# Agregar variable de entorno para la URL del servidor gRPC
-ENV GRPC_SERVER_URL=http://server-go-service:50051
-
-RUN adduser -D app_user
+# Cambiar a usuario sin privilegios
 USER app_user
 
-# Comando para ejecutar la aplicación
+# Exponer el puerto HTTP de la API
+EXPOSE 8080
+
+# Variable de entorno para el servidor gRPC
+ENV GRPC_SERVER_URL=http://server-go-service:50051
+
+# Comando por defecto
 CMD ["./api_rust"]

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer-kafka
+  template:
+    metadata:
+      labels:
+        app: consumer-kafka
+    spec:
+      containers:
+        - name: consumer-kafka
+          image: honied-maryjo-rejectedly.ngrok-free.dev/consumer_kafka:1.0   # Reemplaza con tu imagen Docker
+          env:
+            - name: VALKEY_SERVICE_URL
+              value: "valkey:6379"   # Apunta al servicio de Valkey dentro del clúster
+            - name: KAFKA_BROKER
+              value: "kafka:9092"    # Apunta al servicio de Kafka dentro del clúster
+          ports:
+            - containerPort: 0        # No expone ningún puerto, solo consume internamente
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consumer-kafka
+spec:
+  selector:
+    app: consumer-kafka
+  ports:
+    - protocol: TCP
+      port: 6001        # Opcional, si quieres exponer gRPC u otro puerto
+      targetPort: 6001
+  type: ClusterIP

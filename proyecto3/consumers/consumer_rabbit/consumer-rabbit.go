@@ -16,27 +16,32 @@ var ctx = context.Background()
 
 func main() {
 	// --- Conexión a Valkey/Redis ---
-	addr := func() string {
-		if v := os.Getenv("VALKEY_SERVICE_URL"); v != "" {
-			return v
-		}
-		return "localhost:6379"
-	}()
+	addr := os.Getenv("VALKEY_SERVICE_URL")
+	if addr == "" {
+		addr = "valkey:6379" // Service de Redis/Valkey en Kubernetes
+	}
+
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: "",
 		DB:       0,
 	})
+
 	if pong, err := rdb.Ping(ctx).Result(); err != nil {
 		log.Fatal("Error conectando a Valkey:", err)
 	} else {
-		fmt.Println("Conexión exitosa a Valkey:", pong)
+		fmt.Println("✅ Conexión exitosa a Valkey:", pong)
 	}
 
 	// --- Conexión a RabbitMQ ---
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	rabbitmqURL := os.Getenv("RABBITMQ_URL")
+	if rabbitmqURL == "" {
+		rabbitmqURL = "amqp://guest:guest@rabbitmq:5672/"
+	}
+
+	conn, err := amqp.Dial(rabbitmqURL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error conectando a RabbitMQ:", err)
 	}
 	defer conn.Close()
 

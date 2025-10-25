@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"net"
+	"os"
 	"time"
 
 	pb "server_go/proto"
@@ -18,12 +19,21 @@ type server struct {
 }
 
 var (
-	kafkaWriterAddr  = "localhost:6001" // gRPC Kafka writer
-	rabbitWriterAddr = "localhost:6002" // gRPC RabbitMQ writer
+	// Se inicializa con valores por defecto
+	kafkaWriterAddr  = "localhost:6001"
+	rabbitWriterAddr = "localhost:6002"
 )
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
+
+	// Sobrescribir si existen variables de entorno
+	if env := os.Getenv("KAFKA_BROKER"); env != "" {
+		kafkaWriterAddr = env
+	}
+	if env := os.Getenv("RABBITMQ_URL"); env != "" {
+		rabbitWriterAddr = env
+	}
 }
 
 // SendTweet decide aleatoriamente a cuál writer enviar

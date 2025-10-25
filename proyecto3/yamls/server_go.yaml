@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-go
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: server-go
+  template:
+    metadata:
+      labels:
+        app: server-go
+    spec:
+      containers:
+        - name: server-go
+          image: honied-maryjo-rejectedly.ngrok-free.dev/server_go:2.0
+          ports:
+            - containerPort: 50051
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka:6001"          # Ajusta si tu Kafka tiene otro host/puerto
+            - name: RABBITMQ_URL
+              value: "rabbit-writer:6002"  # Apunta al Service del RabbitMQ Writer
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-go
+spec:
+  selector:
+    app: server-go
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
+  type: ClusterIP

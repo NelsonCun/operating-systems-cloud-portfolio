@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: server-go
-          image: honied-maryjo-rejectedly.ngrok-free.dev/server_go:2.0
+          image: registry.example.com/so1/server-go:2.0
           ports:
             - containerPort: 50051
           env:

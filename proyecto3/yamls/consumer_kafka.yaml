@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: consumer-kafka
-          image: honied-maryjo-rejectedly.ngrok-free.dev/consumer_kafka:1.0   # Reemplaza con tu imagen Docker
+          image: registry.example.com/so1/consumer-kafka:1.0   # Reemplaza con tu imagen Docker
           env:
             - name: VALKEY_SERVICE_URL
               value: "valkey:6379"   # Apunta al servicio de Valkey dentro del clúster

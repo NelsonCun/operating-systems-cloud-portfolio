@@ -23,7 +23,7 @@ var rabbitmqURL string
 func init() {
 	rabbitmqURL = os.Getenv("RABBITMQ_URL")
 	if rabbitmqURL == "" {
-		rabbitmqURL = "amqp://guest:guest@localhost:5672/"
+		log.Fatal("RABBITMQ_URL is required")
 	}
 }
 

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: kafka-writer
-          image: honied-maryjo-rejectedly.ngrok-free.dev/kafka_writer:1.0   # Reemplaza con tu imagen Docker
+          image: registry.example.com/so1/kafka-writer:1.0   # Reemplaza con tu imagen Docker
           ports:
             - containerPort: 6001
           env:

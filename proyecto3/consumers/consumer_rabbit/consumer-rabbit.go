@@ -36,7 +36,7 @@ func main() {
 	// --- Conexión a RabbitMQ ---
 	rabbitmqURL := os.Getenv("RABBITMQ_URL")
 	if rabbitmqURL == "" {
-		rabbitmqURL = "amqp://guest:guest@rabbitmq:5672/"
+		log.Fatal("RABBITMQ_URL is required")
 	}
 
 	conn, err := amqp.Dial(rabbitmqURL)

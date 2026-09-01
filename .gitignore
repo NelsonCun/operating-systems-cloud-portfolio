@@ -49,3 +49,9 @@ proyecto-2/modulo-kernel/*.cmd
 proyecto-2/modulo-kernel/.*.cmd
 proyecto-2/modulo-kernel/Module.symvers
 proyecto-2/modulo-kernel/modules.order
+
+# ==================================
+# 🔐 Kubernetes local secrets
+# ==================================
+proyecto3/yamls/secrets.yaml
+proyecto3/yamls/*-secrets.yaml

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api-rust
-          image: honied-maryjo-rejectedly.ngrok-free.dev/api_rust:latest
+          image: registry.example.com/so1/api-rust:latest
           env:
             - name: GRPC_SERVER_URL
               value: "http://server-go:5001"

@@ -14,12 +14,15 @@ spec:
     spec:
       containers:
         - name: rabbit-writer
-          image: honied-maryjo-rejectedly.ngrok-free.dev/rabbit_writer:1.0   # Cambia al tag correcto
+          image: registry.example.com/so1/rabbit-writer:1.0   # Cambia al tag correcto
           ports:
             - containerPort: 6002
           env:
             - name: RABBITMQ_URL
-              value: "amqp://guest:guest@rabbitmq:5672/"
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: url
           imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1

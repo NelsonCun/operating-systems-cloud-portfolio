@@ -31,3 +31,21 @@ bin/
 *.env
 .env.*
 docker-data/
+
+# ==================================
+# 🐍 Python
+# ==================================
+__pycache__/
+*.py[cod]
+
+# ==================================
+# 🧩 Linux kernel module build artifacts
+# ==================================
+proyecto-2/modulo-kernel/*.ko
+proyecto-2/modulo-kernel/*.o
+proyecto-2/modulo-kernel/*.mod
+proyecto-2/modulo-kernel/*.mod.c
+proyecto-2/modulo-kernel/*.cmd
+proyecto-2/modulo-kernel/.*.cmd
+proyecto-2/modulo-kernel/Module.symvers
+proyecto-2/modulo-kernel/modules.order

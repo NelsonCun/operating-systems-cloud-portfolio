@@ -14,11 +14,14 @@ spec:
     spec:
       containers:
         - name: consumer-rabbit
-          image: honied-maryjo-rejectedly.ngrok-free.dev/consumer_rabbit:2.0
+          image: registry.example.com/so1/consumer-rabbit:2.0
           env:
             # URL de RabbitMQ, apuntando al Service de RabbitMQ en Kubernetes
             - name: RABBITMQ_URL
-              value: "amqp://guest:guest@rabbitmq:5672/"
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: url
             # URL de Redis/Valkey, apuntando al Service de Valkey
             - name: VALKEY_SERVICE_URL
               value: "valkey:6379"

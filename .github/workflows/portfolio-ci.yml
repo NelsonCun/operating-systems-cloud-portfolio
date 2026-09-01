@@ -29,10 +29,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: "1.24.x"
           cache-dependency-path: ${{ matrix.module }}/go.sum
@@ -47,12 +47,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install stable Rust
         run: |
           rustup update stable
           rustup default stable
+
+      - name: Install Protocol Buffers compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler
+          protoc --version
 
       - name: Cargo check
         working-directory: proyecto3/api_rust
@@ -64,7 +70,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Reject local secret files
         shell: bash

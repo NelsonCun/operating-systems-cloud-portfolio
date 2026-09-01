@@ -1,0 +1,97 @@
+name: Portfolio CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    name: Go - ${{ matrix.module }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - proyecto3/server_go
+          - proyecto3/valkey
+          - proyecto3/consumers/consumer-kafka
+          - proyecto3/consumers/consumer_rabbit
+          - proyecto3/go_services/writer_kafka
+          - proyecto3/go_services/writer_rabbit
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.x"
+          cache-dependency-path: ${{ matrix.module }}/go.sum
+
+      - name: Test and compile
+        working-directory: ${{ matrix.module }}
+        run: go test ./...
+
+  rust:
+    name: Rust API
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        run: |
+          rustup update stable
+          rustup default stable
+
+      - name: Cargo check
+        working-directory: proyecto3/api_rust
+        run: cargo check --locked
+
+  public-safety:
+    name: Public repository safety checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reject local secret files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if git ls-files | grep -Eq '(^|/)secrets\.yaml$|(^|/)\.env($|\.)'; then
+            echo "Tracked local secret/configuration file detected."
+            exit 1
+          fi
+
+      - name: Reject historical insecure placeholders
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if git grep -n -I -E \
+            'guest:guest|honied-maryjo-rejectedly\.ngrok-free\.dev|value: "admin"|value: "guest"' \
+            -- proyecto3; then
+            echo "Unsafe or historical public configuration detected."
+            exit 1
+          fi
+
+      - name: Verify public examples
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f proyecto3/yamls/secrets.example.yaml
+          grep -q 'CHANGE_ME' proyecto3/yamls/secrets.example.yaml
+          grep -R -q 'registry.example.com/so1/' proyecto3/yamls
